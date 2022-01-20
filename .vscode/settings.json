@@ -1,0 +1,25 @@
+{
+    "files.associations": {
+        "cmath": "cpp",
+        "ostream": "cpp",
+        "xlocmon": "cpp",
+        "xlocnum": "cpp",
+        "xloctime": "cpp",
+        "*.tcc": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "initializer_list": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "iosfwd": "cpp",
+        "xlocale": "cpp",
+        "chrono": "cpp",
+        "algorithm": "cpp"
+    }
+}

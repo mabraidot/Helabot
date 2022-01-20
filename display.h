@@ -50,14 +50,14 @@ void display_number(float count)
     uint8_t ones = 0;
     uint8_t tenths = 0;
 
-    tenths = round((count - floor(count)) * 10);
     tens = floor(count / 10);
     ones = floor(count) - (tens * 10);
+    tenths = round((count - floor(count)) * 10);
 
     digitalWrite(SHIFT_LATCH_PIN, LOW);
-    shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, digit_pattern[tens]);
-    shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, digit_pattern[ones] | digit_pattern[16]); // Show number with decimal point
-    shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, digit_pattern[tenths]);
+    shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, digit_pattern[abs(tens)]);
+    shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, digit_pattern[abs(ones)] | digit_pattern[16]); // Show number with decimal point
+    shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, digit_pattern[abs(tenths)]);
     digitalWrite(SHIFT_LATCH_PIN, HIGH);
 }
 

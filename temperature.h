@@ -1,52 +1,59 @@
 #include <OneWire.h>
-#include <DallasTemperature.h>
 
-#define ONE_WIRE_BUS 10
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
+OneWire ds(10);
 
+float offset = 3.0;
 float temperature = 0.0;
-int error = 0;
+float temperatureSetPoint = 0.0;
 
-void temperature_init(void)
+
+void temperature_init()
 {
-    sensors.begin();
-    if (sensors.getDS18Count() == 0)
-    {
-        temperature = 30.3;
-    }
-    else
-    {
-        sensors.setResolution(11);
-    }
+  temperatureSetPoint = eeprom_read();
 }
 
 float temperature_get(void)
 {
-    return temperature;
+  return temperature;
 }
 
-int temperature_error(void)
+float temperature_get_set_point(void)
 {
-    return error;
+  return temperatureSetPoint;
 }
 
-void temperature_handle(void)
+void temperature_set_set_point(float setPoint)
 {
-    static int interval = 500;
-    static long timeout = 0;
-    if (abs((long)millis() - timeout) >= interval)
-    {
-        if (sensors.getDS18Count() != 0)
-        {
-            error = 0;
-            sensors.requestTemperatures();
-            temperature = sensors.getTempCByIndex(0);
-            timeout = millis();
-        }
-        else
-        {
-            error = 1;
-        }
-    }
+  temperatureSetPoint = setPoint;
+  eeprom_write(setPoint);
+}
+
+void temperature_handle()
+{
+  static int reading = 0;
+  static long readingTimeout = 0;
+
+  if (!reading)
+  {
+    reading = 1;
+    readingTimeout = millis();
+    ds.reset();
+    ds.write(0xCC);
+    ds.write(0x44);
+  }
+
+  if (abs((long)millis() - readingTimeout) >= 750 && reading)
+  {
+    readingTimeout = millis();
+    reading = 0;
+  
+    byte data[2];
+    ds.reset();
+    ds.write(0xCC);
+    ds.write(0xBE);
+
+    data[0] = ds.read();
+    data[1] = ds.read();
+    temperature = data[1] * 16.0 + data[0] / 16.0;
+  }
 }
