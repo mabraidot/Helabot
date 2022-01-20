@@ -1,8 +1,10 @@
-int programmingMode = 0;
-float programmingSetPoint = 0.0;
+float temperatureOffset = 2.0;
 
 int buttonInterval = 300;
 long buttonTimeout = 0;
+
+int programmingMode = 0;
+float programmingSetPoint = 0.0;
 
 void cooler_init(void)
 {
@@ -70,16 +72,15 @@ void cooler_handle(void)
     display_number(programmingSetPoint, 1);
   }
 
-  /*
-  if pressed button c
-    if not programmingmode and programmingTimeout == 0
-      programmingTimeout = millis();
-  else
-    if programmingmode
-      if programmingTimeout > 0 and millis - programmingTimeout > 2000
-        programmingmode = 1
-        programmingTimeout = 0
-    else
-      programmingmode = 0
-  */
+  // COOLER CONTROL
+  if (temperature_get() >= (temperature_get_set_point() + temperatureOffset))
+  {
+    relays_enable(1);
+    // relays_enable(2);
+  }
+  if (temperature_get() <= temperature_get_set_point())
+  {
+    relays_disable(1);
+    // relays_disable(2);
+  }
 }
