@@ -31,10 +31,11 @@ void loop()
   }
   else if (buttons_pressed("a"))
   {
-    relays_enable(1);
+    temperature_set_set_point(temperature_get());
   }
   else if (buttons_pressed("c"))
   {
+    relays_enable(1);
     relays_enable(2);
   }
   else if (buttons_pressed("b"))
